@@ -16,7 +16,6 @@ class CryptoUtils(
 
     companion object {
         private const val AES_TRANSFORMATION = "AES/GCM/NoPadding"
-        private const val RSA_TRANSFORMATION = "RSA/ECB/OAEPWithSHA-256AndMGF1Padding"
         private const val HMAC_ALGORITHM = "HmacSHA256"
         private const val GCM_TAG_LENGTH = 128 // bits
     }

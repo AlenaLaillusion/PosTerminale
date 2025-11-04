@@ -1,5 +1,6 @@
 package com.example.posterminale.data.repository
 
+import android.content.Context
 import com.example.posterminale.data.TlvEncoder
 import com.example.posterminale.data.network.PacketBuilder
 import com.example.posterminale.data.network.TcpClient
@@ -10,6 +11,8 @@ import com.example.posterminale.domain.model.TransactionResult
 import com.example.posterminale.domain.model.TransactionStatus
 import com.example.posterminale.domain.repository.TransactionRepository
 import com.example.posterminale.utils.TLVParser
+import dagger.hilt.android.qualifiers.ApplicationContext
+import java.io.File
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.security.PublicKey
@@ -17,6 +20,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class TransactionRepositoryImpl @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val crypto: CryptoManagerContract,
    // private val tcpClient: TcpClient,
     private val transport: Transport,
@@ -42,9 +46,10 @@ class TransactionRepositoryImpl @Inject constructor(
             encryptedTlv = encryptedPayload
         )
 
-        //val response = tcpClient.sendPacket(packet)
         val response = transport.sendPacket(packet)
 
+        val file = File(context.filesDir, "packet.bin")
+        file.writeBytes(packet)
         return parseServerResponse(response)
     }
 
