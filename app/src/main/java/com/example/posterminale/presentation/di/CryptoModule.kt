@@ -1,12 +1,15 @@
 package com.example.posterminale.presentation.di
 
+import android.content.Context
 import android.util.Base64
+import com.example.posterminale.R
 import com.example.posterminale.data.CryptoManagerImpl
 import com.example.posterminale.domain.CryptoManagerContract
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import java.security.KeyFactory
 import java.security.PublicKey
@@ -40,20 +43,20 @@ object CryptoProvidesModule {
     @Provides
     @Singleton
     @Named("ServerPublicKey")
-    fun provideServerPublicKey(): PublicKey {
-        // Твой публичный ключ в Base64
-        val base64Key = """
-        MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzUJIOmwRTAawOwlAx1RQ
-aBKQzVxFhcX8c74F5PVuxonLp/h8w+3wZkHn+MqmVdhFvfGMrmK98MTxxReozZog
-mUp0pNGF2JVcza1YJQ8Ipkml4rQ7RiWxDLebP1IPG+5PEZyTKsD7lR77o9Jkln/i
-nQun7OdgOBW3wZZDkR/VEqw/zt2OZ4+GLORMro2dy+C/MEE6BQQA0j9x8D3HMjHK
-eVaSXdhiBXh2xirjxMIbe6yGme2VBsStD3g63lP54b0EKN9c9KOudp742p5cu+Hd
-4eklQAHk736hGDW+mkHZgxR/4nauMJMnlJnpRP2l3sZ+v1lsmRN4iAsxcE8LUIk5
-LwIDAQAB
-    """.trimIndent().replace("\n", "")
+    fun provideServerPublicKey(@ApplicationContext context: Context): PublicKey {
+        val inputStream = context.resources.openRawResource(R.raw.public_key)
+        return try {
+            val keyBytes = inputStream.readBytes()
+            val publicKeyPEM = String(keyBytes)
+                .replace("-----BEGIN PUBLIC KEY-----", "")
+                .replace("-----END PUBLIC KEY-----", "")
+                .replace("\\s".toRegex(), "")
 
-        val keyBytes = Base64.decode(base64Key, Base64.NO_WRAP)
-        val keySpec = X509EncodedKeySpec(keyBytes)
-        return KeyFactory.getInstance("RSA").generatePublic(keySpec)
+            val decoded = Base64.decode(publicKeyPEM, Base64.DEFAULT)
+            val keySpec = X509EncodedKeySpec(decoded)
+            KeyFactory.getInstance("RSA").generatePublic(keySpec)
+        } finally {
+            inputStream.close()
+        }
     }
 }

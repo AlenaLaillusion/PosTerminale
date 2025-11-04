@@ -22,4 +22,3 @@ dependencyResolutionManagement {
 rootProject.name = "PosTerminale"
 include(":app")
 include(":pos-server")
-include(":server")
