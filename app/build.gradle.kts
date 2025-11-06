@@ -6,14 +6,15 @@ plugins {
 }
 
 // Hilt. Allow references to generated code
-kapt {
-    correctErrorTypes = true
+kotlin {
+    kapt {
+        correctErrorTypes = true
+    }
 }
 
 android {
     namespace = "com.example.posterminale"
-    buildFeatures.buildConfig = true
-    compileSdk = 36
+    compileSdk = 35 // Рекомендуется использовать стабильную версию (36 может быть нестабильной)
 
     defaultConfig {
         applicationId = "com.example.posterminale"
@@ -31,7 +32,7 @@ android {
     }
 
     buildTypes {
-        release {
+        getByName("release") {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -39,17 +40,22 @@ android {
             )
         }
     }
+
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
+
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
+
     buildFeatures {
-        buildConfig = true
         compose = true
+        viewBinding = true
+        buildConfig = true
     }
+
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
     }
@@ -70,7 +76,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -93,7 +98,6 @@ dependencies {
 
     implementation(libs.timber)
 
-
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -106,7 +110,6 @@ dependencies {
     testImplementation(libs.mockwebserver)
     androidTestImplementation(libs.mockk.android)
 }
-
 
 tasks.withType<Test>().configureEach {
     jvmArgs("--add-opens", "java.base/java.net=ALL-UNNAMED")
