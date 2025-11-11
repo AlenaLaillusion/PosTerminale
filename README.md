@@ -32,8 +32,11 @@ cat private_key.pem
 ```bash
 openssl rsa -pubout -in private_key.pem -out public_key.pem
 ```
-После выполнения этих команд оба ключа будут находиться в папке key.
+После выполнения этих команд оба ключа будут находиться в папке keys.
 Публичный ключ public_key.pem необходимо переместить в каталог: app/src/main/res/raw
+```bash
+mv public_key.pem ../app/src/main/res/raw/public_key.pem
+```
 
 
 ##  2.Настройка IP-адресов для взаимодействия Android-клиента и сервера
