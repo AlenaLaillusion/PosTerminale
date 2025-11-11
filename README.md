@@ -8,16 +8,17 @@
 # Инструкция по настройке и запуску проекта
 
 ##  1.Создание RSA-ключей
-Перейдите в корень проекта через Git Bash:
+Перейдите в корень pos-server через Git Bash:
 ```bash
-cd <your_path>/posTerminale
+cd <your_path>/posTerminale/pos-server
 ```
-В корне проекта необходимо создать и перейти в папку с названием `keys`:
+В папке pos-server необходимо создать и перейти в папку с названием `keys`:
 ```bash
 mkdir keys
 cd keys
 ls -la     // убедиться, что ты в нужной папке
 ```
+**!Фактическое расположение директории keys зависит от working directory запускаемого исполняемого файла pos-server!**
 
 Для генерации приватного ключа выполните команду:
 ```bash
@@ -35,7 +36,7 @@ openssl rsa -pubout -in private_key.pem -out public_key.pem
 После выполнения этих команд оба ключа будут находиться в папке keys.
 Публичный ключ public_key.pem необходимо переместить в каталог: app/src/main/res/raw
 ```bash
-mv public_key.pem ../app/src/main/res/raw/public_key.pem
+mv public_key.pem ../../app/src/main/res/raw/public_key.pem
 ```
 
 
@@ -79,6 +80,7 @@ chmod +x gradlew
 
 или можно запустить через IDEA, откройте файл: pos-server/src/main/java/com/example/main.kt
 и нажмите кнопку Run на верхней панели.
+**Убедитесь перед запуском, что Working Directory указывает на директорию pos-server (Run Configuretion)** 
 
 ##  4.Сборка и запуск Android-приложения
 
